@@ -8,16 +8,17 @@ class Spreadsheet
     @spreadsheet = session.spreadsheet_by_title NAME
   end
 
-  def update_portfolio(value)
-    cur_date = Time.now
+  def update_portfolio(total, gain)
+    cur_time = Time.now
 
     portfolio_requires_change = portfolio_sheet.num_rows <= 1
     portfolio_requires_change = true if !portfolio_requires_change && (portfolio_sheet.rows.last[1].to_s != value.to_s)
 
     if portfolio_requires_change
       row_id = portfolio_sheet.num_rows + 1
-      portfolio_sheet[row_id, 1] = cur_date.to_s(:long)
-      portfolio_sheet[row_id, 2] = value
+      portfolio_sheet[row_id, 1] = cur_time.to_s
+      portfolio_sheet[row_id, 2] = total
+      portfolio_sheet[row_id, 3] = gain
       portfolio_sheet.save
     end
   end
@@ -38,6 +39,25 @@ class Spreadsheet
     shares_sheet[share_index, 5] = share_data[:gain]
     shares_sheet[share_index, 6] = share_data[:total]
     shares_sheet.save
+  end
+
+  def last_day_values
+    cur_time = Time.now
+
+    viewable_rows = portfolio_sheet.rows[1..portfolio_sheet.num_rows]
+    most_recent = viewable_rows.last(10)
+    parsed = most_recent.map do |row|
+      d = Time.parse(row[0])
+      next nil if d.day == cur_time.day && d.month == cur_time.month && d.year == cur_time.year
+      [d, *row]
+    end.compact
+
+    closest = parsed.sort_by { |row| cur_time - row[0] }.first
+    return nil unless closest
+    {
+      total_value: closest[2],
+      gain:        closest[3]
+    }
   end
 
   private

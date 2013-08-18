@@ -4,7 +4,7 @@ task :sync do
   sp = Spreadsheet.new
 
   data = e.portfolio
-  sp.update_portfolio data[:total_value]
+  sp.update_portfolio data[:total_value], data[:gain]
 
   data[:shares].each do |code, share_data|
     sp.update_share code, share_data

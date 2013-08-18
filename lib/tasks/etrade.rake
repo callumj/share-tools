@@ -5,7 +5,7 @@ namespace :etrade do
     e = EtradeAccount.new
     data = e.portfolio
 
-    STDOUT.puts "Total: #{data[:total_value]}"
+    STDOUT.puts "Total: $#{data[:total_value]} ($#{data[:gain]})"
 
     rows = data[:shares].map do |code, set|
       [code, *set.map(&:last)]

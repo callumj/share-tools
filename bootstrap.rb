@@ -12,5 +12,7 @@ $:.unshift File.join(APP_ROOT, "lib")
 
 RailsConfig.load_and_set_settings(File.join(APP_ROOT, "config", "settings.yml"))
 
+Time.zone = "+8 GMT"
+
 # bring in libs
 require 'share-tools'

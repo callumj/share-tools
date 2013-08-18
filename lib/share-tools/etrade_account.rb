@@ -36,10 +36,15 @@ class EtradeAccount
     page = portfolio_page
     total_value = page.at("span#miniTab_ucPortfolios_lblTotalMarketValueAUDValue").try :inner_text
     total_value.gsub!(/[$,]/, "")
+
+    gain = page.at("div#miniTab_ucPortfolios_pnlPortFolioSummary").css(".gain.shown").last.inner_text
+    gain.gsub!(/[$,]/, "")
+
     shares = extract_shares page
 
     {
       total_value: total_value.to_f,
+      gain:        gain.to_f,
       shares:      shares
     }
   end
