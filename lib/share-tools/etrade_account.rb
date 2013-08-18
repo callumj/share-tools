@@ -8,6 +8,9 @@ class EtradeAccount
 
   def initialize(user = Settings.etrade.user_id, password = Settings.etrade.password)
     @client = Mechanize.new
+    cert_store = OpenSSL::X509::Store.new
+    cert_store.add_file File.join(APP_ROOT, "data", "cacert.pem")
+    client.cert_store = cert_store
     @user = user
     @password = password
 
