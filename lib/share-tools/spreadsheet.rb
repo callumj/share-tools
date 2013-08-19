@@ -12,7 +12,7 @@ class Spreadsheet
     cur_time = Time.now
 
     portfolio_requires_change = portfolio_sheet.num_rows <= 1
-    portfolio_requires_change = true if !portfolio_requires_change && (portfolio_sheet.rows.last[1].to_s != value.to_s)
+    portfolio_requires_change = true if !portfolio_requires_change && (portfolio_sheet.rows.last[1].to_s != total.to_s)
 
     if portfolio_requires_change
       row_id = portfolio_sheet.num_rows + 1
